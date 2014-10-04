@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <title>My first Three.js app</title>
+        <style>canvas { width: 100%; height: 100% }</style>
+    </head>
+    <body>
+        <script src="js/three.min.js"></script>
+        <script>
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+            var anc = {
+                "h":0.5,
+                "w":0.5,
+                "d":0.5,
+                "rx":0.2,
+                "ry":0.2,
+                "rz":0.2,
+                "px":0,
+                "py":2,
+                "pz":0
+            }
+            var Mat = new THREE.MeshNormalMaterial();
+            var headGeo = new THREE.BoxGeometry(anc['w'],anc['h'],anc['d']);
+            var pelGeo = new THREE.BoxGeometry(anc['w']*1.5,anc['h'],anc['d']);
+            var torGeo = new THREE.BoxGeometry(anc['w']*1.5,anc['h']*2,anc['d']);
+
+            var head = new THREE.Mesh(headGeo, Mat);
+            var tor = new THREE.Mesh(torGeo, Mat);
+            var pel = new THREE.Mesh(pelGeo, Mat);
+
+            head.rotation.x = anc['rx'];
+            head.rotation.y = anc['ry'];
+            tor.rotation.x = anc['rx'];
+            tor.rotation.y = anc['ry'];
+            pel.rotation.x = anc['rx'];
+            pel.rotation.y = anc['ry'];
+
+            head.position.x = anc['px'];
+            head.position.y = anc['py'];
+            head.position.z = anc['pz'];
+            tor.position.x = anc['px'];
+            tor.position.y = anc['py']-1;
+            tor.position.z = anc['pz'];
+            pel.position.x = anc['px'];
+            pel.position.y = anc['py']-2;
+            pel.position.z = anc['pz'];
+
+            var LimbMat = new THREE.LineNormalMaterial({color: 0x0000ff});
+
+            var LLegGeo = new THREE.Geometry();
+            LLegGeo.vertices.push(
+                new THREE.Vector3( -10, 0, 0 ),
+                new THREE.Vector3( 0, 10, 0 ),
+                new THREE.Vector3( 10, 0, 0 )
+                new THREE.Vector3( 10, 0, 0 )
+            );
+            var RLegGeo = new THREE.Geometry();
+            RLegGeo.vertices.push(
+                new THREE.Vector3( -10, 0, 0 ),
+                new THREE.Vector3( 0, 10, 0 ),
+                new THREE.Vector3( 10, 0, 0 )
+                new THREE.Vector3( 10, 0, 0 )
+            );
+
+            var LLeg = new THREE.Line( LLegGeo, LegMat );
+            var RLeg = new THREE.Line( geometry, LegMat );
+            scene.add( line );
+
+            scene.add(pel);
+            scene.add(head);
+            scene.add(tor);
+
+            camera.position.z = 8;
+
+            var render = function () {
+                requestAnimationFrame(render);
+                renderer.render(scene, camera);
+            };
+
+            render();
+        </script>
+    </body>
+</html>
