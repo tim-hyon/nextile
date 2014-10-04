@@ -13,96 +13,104 @@
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
-            var anc = {
-                "h":0.5,
-                "w":0.5,
-                "d":0.5,
-                "rx":0.0,
-                "ry":0.0,
-                "rz":0.0,
-                "px":0,
-                "py":2,
-                "pz":0
-            }
-            var Mat = new THREE.MeshNormalMaterial();
-            var headGeo = new THREE.BoxGeometry(anc['w'],anc['h'],anc['d']);
-            var pelGeo = new THREE.BoxGeometry(anc['w']*1.5,anc['h'],anc['d']);
-            var torGeo = new THREE.BoxGeometry(anc['w']*1.5,anc['h']*2,anc['d']);
+            angleRender = function(rU, rB, rE, lU, lB, lE){
+                var len = 1;
+                var anc = {
+                    "h":len,
+                    "w":len,
+                    "d":len,
+                    "rx":0.0,
+                    "ry":0.0,
+                    "rz":0.0,
+                    "px":0,
+                    "py":4*len,
+                    "pz":0
+                }
+                var Mat = new THREE.MeshNormalMaterial();
+                var headGeo = new THREE.BoxGeometry(anc['w'],anc['h'],anc['d']);
+                var pelGeo = new THREE.BoxGeometry(anc['w']*1.5,anc['h'],anc['d']);
+                var torGeo = new THREE.BoxGeometry(anc['w']*1.5,anc['h']*2,anc['d']);
 
-            var head = new THREE.Mesh(headGeo, Mat);
-            var tor = new THREE.Mesh(torGeo, Mat);
-            var pel = new THREE.Mesh(pelGeo, Mat);
+                var head = new THREE.Mesh(headGeo, Mat);
+                var tor = new THREE.Mesh(torGeo, Mat);
+                var pel = new THREE.Mesh(pelGeo, Mat);
 
-            head.rotation.x = anc['rx'];
-            head.rotation.y = anc['ry'];
-            tor.rotation.x = anc['rx'];
-            tor.rotation.y = anc['ry'];
-            pel.rotation.x = anc['rx'];
-            pel.rotation.y = anc['ry'];
+                head.rotation.x = anc['rx'];
+                head.rotation.y = anc['ry'];
+                tor.rotation.x = anc['rx'];
+                tor.rotation.y = anc['ry'];
+                pel.rotation.x = anc['rx'];
+                pel.rotation.y = anc['ry'];
 
-            head.position.x = anc['px'];
-            head.position.y = anc['py'];
-            head.position.z = anc['pz'];
-            tor.position.x = anc['px'];
-            tor.position.y = anc['py']-1;
-            tor.position.z = anc['pz'];
-            pel.position.x = anc['px'];
-            pel.position.y = anc['py']-2;
-            pel.position.z = anc['pz'];
+                head.position.x = anc['px'];
+                head.position.y = anc['py'];
+                head.position.z = anc['pz'];
+                tor.position.x = anc['px'];
+                tor.position.y = anc['py']-2*len;
+                tor.position.z = anc['pz'];
+                pel.position.x = anc['px'];
+                pel.position.y = anc['py']-4*len;
+                pel.position.z = anc['pz'];
 
-            var LimbMat = new THREE.LineBasicMaterial({color: 0x0000ff});
-            var shoGeo = new THREE.Geometry();
-            var LArmGeo = new THREE.Geometry();
-            var RArmGeo = new THREE.Geometry();
-            var LLegGeo = new THREE.Geometry();
-            var RLegGeo = new THREE.Geometry();
+                var LimbMat = new THREE.LineBasicMaterial({color: 0x0000ff});
+                var shoGeo = new THREE.Geometry();
+                var LArmGeo = new THREE.Geometry();
+                var RArmGeo = new THREE.Geometry();
+                var LLegGeo = new THREE.Geometry();
+                var RLegGeo = new THREE.Geometry();
 
-            shoGeo.vertices.push(
-                new THREE.Vector3( -.5 , 1.5, 0 ),
-                new THREE.Vector3( .5, 1.5, 0)
-            );
-            LArmGeo.vertices.push(
-                new THREE.Vector3( -.5 , 1.5, 0 ),
-                new THREE.Vector3( -.5 , .75, -.1 ),
-                new THREE.Vector3( -.5 , 0, .1 )
-            );
-            RArmGeo.vertices.push(
-                new THREE.Vector3( .5 , 1.5, 0 ),
-                new THREE.Vector3( .5 , .75, -.1 ),
-                new THREE.Vector3( .5 , 0, .1 )
-            );
-            LLegGeo.vertices.push(
-                new THREE.Vector3( -.375, -.25, 0 ),
-                new THREE.Vector3( -.375, -1.25, .25),
-                new THREE.Vector3( -.375, -2.25, 0 ),
-                new THREE.Vector3( -.375, -2.25, .5 )
-            );
-            RLegGeo.vertices.push(
-                new THREE.Vector3( .375, -.25, 0 ),
-                new THREE.Vector3( .375, -1.25, .25  ),
-                new THREE.Vector3( .375, -2.25, 0 ),
-                new THREE.Vector3( .375, -2.25, .5 )
-            );
+                shoGeo.vertices.push(
+                    new THREE.Vector3( -len , 3*len, 0 ),
+                    new THREE.Vector3( len, 3*len, 0)
+                );
+                LArmGeo.vertices.push(
+                    new THREE.Vector3( -len , 3*len, 0 ),
+                    new THREE.Vector3( -len , .75, -.1 ),
+                    new THREE.Vector3( -len , 0, .1 )
+                );
+                RArmGeo.vertices.push(
+                    new THREE.Vector3( len , 3*len, 0 ),
+                    new THREE.Vector3( len , .75, -.1 ),
+                    new THREE.Vector3( len , 0, .1 )
+                );
+                LLegGeo.vertices.push(
+                    new THREE.Vector3( -.75*len, -.5*len, 0 ),
+                    new THREE.Vector3( -.75*len, -.5*len-2*len, .5*len  ),
+                    new THREE.Vector3( -.75*len, -.5*len-4*len, 0 ),
+                    new THREE.Vector3( -.75*len, -.5*len-4*len, len )
+                );
+                RLegGeo.vertices.push(
+                    new THREE.Vector3( .75*len, -.5*len, 0 ),
+                    new THREE.Vector3( .75*len, -.5*len-2*len, .5*len  ),
+                    new THREE.Vector3( .75*len, -.5*len-4*len, 0 ),
+                    new THREE.Vector3( .75*len, -.5*len-4*len, len )
+                );
 
-            var sho = new THREE.Line( shoGeo, LimbMat );
-            var LArm = new THREE.Line( LArmGeo, LimbMat );
-            var RArm = new THREE.Line( RArmGeo, LimbMat );
-            var LLeg = new THREE.Line( LLegGeo, LimbMat );
-            var RLeg = new THREE.Line( RLegGeo, LimbMat );
+                var sho = new THREE.Line( shoGeo, LimbMat );
+                var LArm = new THREE.Line( LArmGeo, LimbMat );
+                var RArm = new THREE.Line( RArmGeo, LimbMat );
+                var LLeg = new THREE.Line( LLegGeo, LimbMat );
+                var RLeg = new THREE.Line( RLegGeo, LimbMat );
 
-            scene.add( sho );
-            scene.add( LArm );
-            scene.add( RArm );
-            scene.add( LLeg );
-            scene.add( RLeg );
+                scene.add( sho );
+                scene.add( LArm );
+                scene.add( RArm );
+                scene.add( LLeg );
+                scene.add( RLeg );
 
-            scene.add(pel);
-            scene.add(head);
-            scene.add(tor);
+                scene.add(pel);
+                scene.add(head);
+                scene.add(tor);
 
-            camera.position.z = 8;
-            var yrot = .1;
-            var xrot = .1;
+                camera.position.z = 8;
+                var yrot = .1;
+                var xrot = .1;
+                var render = function () {
+                    requestAnimationFrame(render);
+                    renderer.render(scene, camera);
+                };
+                render();
+            };
             $(document).keydown(function(e) {
                 switch(e.which) {
                     case 37: // left
@@ -111,40 +119,29 @@
                         camera.position.z = Math.sin(yrot) * 10;
                         camera.lookAt( scene.position );
                     break;
-
                     case 38: // up
                         xrot+=.1;
                         camera.position.y = Math.cos(xrot) * 10;
                         camera.position.z = Math.sin(xrot) * 10;
                         camera.lookAt( scene.position );
                     break;
-
                     case 39: // right
                         yrot-=.1;
                         camera.position.x = Math.cos(yrot) * 10;
                         camera.position.z = Math.sin(yrot) * 10;
                         camera.lookAt( scene.position );
                     break;
-
                     case 40: // down
                         xrot-=.1;
                         camera.position.y = Math.cos(xrot) * 10;
                         camera.position.z = Math.sin(xrot) * 10;
                         camera.lookAt( scene.position );
                     break;
-
                     default: return; // exit this handler for other keys
                 }
-                e.preventDefault(); // prevent the default action (scroll / move caret)
+                e.preventDefault(); // prevent the default action (scroll / move caret);
             });
-
-
-            var render = function () {
-                requestAnimationFrame(render);
-                renderer.render(scene, camera);
-            };
-
-            render();
+            angleRender(0,0,0,0,0,0);
         </script>
     </body>
 </html>
