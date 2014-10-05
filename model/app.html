@@ -8,20 +8,195 @@
     <div id='messagesDiv'></div>
     <input type='text' id='nameInput' placeholder='Name'>
     <input type='text' id='messageInput' placeholder='Message'>
+    <script src="js/three.min.js"></script>
+    <script src="js/jquery.min.js"></script>
     <script>
-      var myDataRef = new Firebase('https://glowing-fire-5750.firebaseio.com/');
-      $('#messageInput').keypress(function (e) {
-        if (e.keyCode == 13) {
-          var name = $('#nameInput').val();
-          var text = $('#messageInput').val();
-          myDataRef.push({name: name, text: text});
-          $('#messageInput').val('');
-        }
-      });
-      myDataRef.on('child_added', function(snapshot) {
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+      var LeftAngles = new Firebase('https://glowing-fire-5750.firebaseio.com/');
+      var RightAngles = new Firebase('https://nextile.firebaseio.com/');
+      myDataRef.on('angles_added', function(snapshot) {
         var message = snapshot.val();
         displayChatMessage(message.name, message.text);
       });
+
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+            angleRender = function(rU, rB, rF, rE, lU, lB, lF, lE){
+                var len = 1;
+                var anc = {
+                    "h":len,
+                    "w":len,
+                    "d":len,
+                    "rx":0.0,
+                    "ry":0.0,
+                    "rz":0.0,
+                    "px":0,
+                    "py":4*len,
+                    "pz":0
+                }
+                var Mat = new THREE.MeshNormalMaterial();
+                var headGeo = new THREE.BoxGeometry(anc['w'],anc['h'],anc['d']);
+                var pelGeo = new THREE.BoxGeometry(anc['w']*1.5,anc['h'],anc['d']);
+                var torGeo = new THREE.BoxGeometry(anc['w']*1.5,anc['h']*2,anc['d']);
+
+                var head = new THREE.Mesh(headGeo, Mat);
+                var tor = new THREE.Mesh(torGeo, Mat);
+                var pel = new THREE.Mesh(pelGeo, Mat);
+
+                head.rotation.x = anc['rx'];
+                head.rotation.y = anc['ry'];
+                tor.rotation.x = anc['rx'];
+                tor.rotation.y = anc['ry'];
+                pel.rotation.x = anc['rx'];
+                pel.rotation.y = anc['ry'];
+
+                head.position.x = anc['px'];
+                head.position.y = anc['py'];
+                head.position.z = anc['pz'];
+                tor.position.x = anc['px'];
+                tor.position.y = anc['py']-2*len;
+                tor.position.z = anc['pz'];
+                pel.position.x = anc['px'];
+                pel.position.y = anc['py']-4*len;
+                pel.position.z = anc['pz'];
+
+                var LimbMat = new THREE.LineBasicMaterial({
+                    color: 0x0000ff,
+                    linewidth: 4 
+                });
+                var shoGeo = new THREE.Geometry();
+                var LArmGeo = new THREE.Geometry();
+                var RArmGeo = new THREE.Geometry();
+                var LLegGeo = new THREE.Geometry();
+                var RLegGeo = new THREE.Geometry();
+
+                shoGeo.vertices.push(
+                    new THREE.Vector3( -len , 3*len, 0 ),
+                    new THREE.Vector3( len, 3*len, 0)
+                );
+                LArmGeo.vertices.push(
+                    new THREE.Vector3( -len , 3*len, 0 ),
+                    new THREE.Vector3( 
+                        -1.5*len*Math.sin(lU)*Math.cos(lB)-len,
+                        -1.5*len*Math.cos(lU)+3*len,
+                        1.5*len*Math.sin(lU)*Math.sin(lB),
+                    new THREE.Vector3( 
+                        -1.5*len*Math.sin(lF)*Math.cos(lE)-len,
+                        -1.5*len*Math.cos(lF)+3*len,
+                        1.5*len*Math.sin(lF)*Math.sin(lE));
+
+
+                );
+                RArmGeo.vertices.push(
+                    new THREE.Vector3( len , 3*len, 0 ),
+                    new THREE.Vector3( 
+                        1.5*len*Math.sin(rU)*Math.cos(rB)+len,
+                        -1.5*len*Math.cos(rU)+3*len,
+                        1.5*len*Math.sin(rU)*Math.sin(rB))
+                    new THREE.Vector3( 
+                        1.5*len*Math.sin(rF)*Math.cos(rE)+len,
+                        -1.5*len*Math.cos(rF)+3*len,
+                        1.5*len*Math.sin(rF)*Math.sin(rE))
+                );
+                LLegGeo.vertices.push(
+                    new THREE.Vector3( -.75*len, -.5*len, 0 ),
+                    new THREE.Vector3( -.75*len, -.5*len-2*len, .5*len  ),
+                    new THREE.Vector3( -.75*len, -.5*len-4*len, 0 ),
+                    new THREE.Vector3( -.75*len, -.5*len-4*len, len )
+                );
+                RLegGeo.vertices.push(
+                    new THREE.Vector3( .75*len, -.5*len, 0 ),
+                    new THREE.Vector3( .75*len, -.5*len-2*len, .5*len  ),
+                    new THREE.Vector3( .75*len, -.5*len-4*len, 0 ),
+                    new THREE.Vector3( .75*len, -.5*len-4*len, len )
+                );
+
+                var sho = new THREE.Line( shoGeo, LimbMat );
+                var LArm = new THREE.Line( LArmGeo, LimbMat );
+                var RArm = new THREE.Line( RArmGeo, LimbMat );
+                var LLeg = new THREE.Line( LLegGeo, LimbMat );
+                var RLeg = new THREE.Line( RLegGeo, LimbMat );
+
+                scene.add( sho );
+                scene.add( LArm );
+                scene.add( RArm );
+                scene.add( LLeg );
+                scene.add( RLeg );
+
+                scene.add(pel);
+                scene.add(head);
+                scene.add(tor);
+
+                camera.position.z = 8;
+                var yrot = .1;
+                var xrot = .1;
+                var render = function () {
+                    var timer = Date.now() * 0.001;
+                    /*
+                    LArm.geometry.vertices =[ 
+                        new THREE.Vector3( -len , 3*len, 0 ),
+                        new THREE.Vector3( 
+                            -1.5*len*Math.sin(lU+timer)*Math.cos(lB+timer)-len,
+                            -1.5*len*Math.cos(lU+timer)+3*len,
+                            1.5*len*Math.sin(lU+timer)*Math.sin(lB+timer))
+
+                    ];
+                    RArm.geometry.vertices =[ 
+                        new THREE.Vector3( len , 3*len, 0 ),
+                        new THREE.Vector3( 
+                            1.5*len*Math.sin(rU+timer)*Math.cos(rB+timer)+len,
+                            -1.5*len*Math.cos(rU+timer)+3*len,
+                            1.5*len*Math.sin(rU+timer)*Math.sin(rB+timer))
+                    ];
+                    /*
+                    RArm.geometry.verticesNeedUpdate = true;
+                    LArm.geometry.verticesNeedUpdate = true;
+                    camera.position.x = Math.cos( timer ) * 10;
+                    camera.position.z = Math.sin( timer ) * 10;
+                    camera.lookAt( scene.position );
+                    */
+                    requestAnimationFrame(render);
+
+                    renderer.render( scene, camera );
+                };
+                render();
+            };
+            angleRender(Math.PI/2,Math.PI/2,0,0,Math.PI/2,Math.PI/2,0,0);
+            /*
+            $(document).keydown(function(e) {
+                switch(e.which) {
+                    case 37: // left
+                        yrot+=.1;
+                        camera.position.x = Math.cos(yrot) * 10;
+                        camera.position.z = Math.sin(yrot) * 10;
+                        camera.lookAt( scene.position );
+                    break;
+                    case 38: // up
+                        xrot+=.1;
+                        camera.position.y = Math.cos(xrot) * 10;
+                        camera.position.z = Math.sin(xrot) * 10;
+                        camera.lookAt( scene.position );
+                    break;
+                    case 39: // right
+                        yrot-=.1;
+                        camera.position.x = Math.cos(yrot) * 10;
+                        camera.position.z = Math.sin(yrot) * 10;
+                        camera.lookAt( scene.position );
+                    break;
+                    case 40: // down
+                        xrot-=.1;
+                        camera.position.y = Math.cos(xrot) * 10;
+                        camera.position.z = Math.sin(xrot) * 10;
+                        camera.lookAt( scene.position );
+                    break;
+                    default: return; // exit this handler for other keys
+                }
+                e.preventDefault(); // prevent the default action (scroll / move caret);
+            })
+            */
+        </script>
       function displayChatMessage(name, text) {
         $('<div/>').text(text).prepend($('<em/>').text(name+': ')).appendTo($('#messagesDiv'));
         $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;

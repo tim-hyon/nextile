@@ -66,20 +66,35 @@
                     new THREE.Vector3( -len , 3*len, 0 ),
                     new THREE.Vector3( len, 3*len, 0)
                 );
-                LArmGeo.vertices.push(
-                    new THREE.Vector3( -len , 3*len, 0 ),
-                    new THREE.Vector3( 
-                        -1.5*len*Math.sin(lU)*Math.cos(lB)-len,
-                        -1.5*len*Math.cos(lU)+3*len,
-                        1.5*len*Math.sin(lU)*Math.sin(lB))
+                var Lx1 = -len;
+                var Lx2 = -1.5*len*Math.sin(lU)*Math.cos(lB)+Lx1;
+                var Lx3 = -1.5*len*Math.sin(lF)*Math.cos(lE)+Lx2;
+                var Ly1 = 3*len;
+                var Ly2 = -1.5*len*Math.cos(lU)+Ly1;
+                var Ly3 = -1.5*len*Math.cos(lF)+Ly2;
+                var Lz1 = 0 
+                var Lz2 = 1.5*len*Math.sin(lU)*Math.sin(lB);
+                var Lz3 = 1.5*len*Math.sin(lF)*Math.sin(lE)+Lz2;
 
+                var Rx1 = len;
+                var Rx2 = 1.5*len*Math.sin(rU)*Math.cos(rB)+Rx1;
+                var Rx3 = 1.5*len*Math.sin(rF)*Math.cos(rE)+Rx2;
+                var Ry1 = 3*len;
+                var Ry2 = -1.5*len*Math.cos(rU)+Ry1;
+                var Ry3 = -1.5*len*Math.cos(rF)+Ry2;
+                var Rz1 = 0 
+                var Rz2 = 1.5*len*Math.sin(rU)*Math.sin(rB);
+                var Rz3 = 1.5*len*Math.sin(rF)*Math.sin(rE)+Rz2;
+
+                LArmGeo.vertices.push(
+                    new THREE.Vector3( Lx1, Ly1, Lz1 ),
+                    new THREE.Vector3( Lx2, Ly2, Lz2 ),
+                    new THREE.Vector3( Lx3, Ly3, Lz3 )
                 );
                 RArmGeo.vertices.push(
-                    new THREE.Vector3( len , 3*len, 0 ),
-                    new THREE.Vector3( 
-                        1.5*len*Math.sin(rU)*Math.cos(rB)+len,
-                        -1.5*len*Math.cos(rU)+3*len,
-                        1.5*len*Math.sin(rU)*Math.sin(rB))
+                    new THREE.Vector3( Rx1, Ry1, Rz1 ),
+                    new THREE.Vector3( Rx2, Ry2, Rz2 ),
+                    new THREE.Vector3( Rx3, Ry3, Rz3 )
                 );
                 LLegGeo.vertices.push(
                     new THREE.Vector3( -.75*len, -.5*len, 0 ),
@@ -115,6 +130,7 @@
                 var xrot = .1;
                 var render = function () {
                     var timer = Date.now() * 0.001;
+                    /*
                     LArm.geometry.vertices =[ 
                         new THREE.Vector3( -len , 3*len, 0 ),
                         new THREE.Vector3( 
@@ -130,8 +146,7 @@
                             -1.5*len*Math.cos(rU+timer)+3*len,
                             1.5*len*Math.sin(rU+timer)*Math.sin(rB+timer))
                     ];
-                    RArm.geometry.verticesNeedUpdate = true;
-                    LArm.geometry.verticesNeedUpdate = true;
+                    */
                     camera.position.x = Math.cos( timer ) * 10;
                     camera.position.z = Math.sin( timer ) * 10;
                     camera.lookAt( scene.position );
@@ -141,7 +156,7 @@
                 };
                 render();
             };
-            angleRender(Math.PI/2,Math.PI/2,0,0,Math.PI/2,Math.PI/2,0,0);
+            angleRender(Math.PI/4,Math.PI/4,Math.PI/4,Math.PI/4,Math.PI/4,Math.PI/4,Math.PI/4,Math.PI/4);
             /*
             $(document).keydown(function(e) {
                 switch(e.which) {
